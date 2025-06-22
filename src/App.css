@@ -1,0 +1,130 @@
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+
+  color: #0f0f0f;
+  background-color: #f6f6f6;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+.container {
+  margin: 0;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 100vh;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+h1 {
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.container > p {
+  margin-bottom: 2rem;
+  color: #666;
+}
+
+.download-section, .test-section {
+  margin: 1rem 0;
+  width: 100%;
+}
+
+.download-button, .test-button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 1rem 2rem;
+  font-size: 1.1em;
+  font-weight: 600;
+  font-family: inherit;
+  color: #ffffff;
+  background-color: #007acc;
+  transition: all 0.25s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+.download-button:hover, .test-button:hover {
+  background-color: #005fa3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.download-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.test-button {
+  background-color: #28a745;
+}
+
+.test-button:hover {
+  background-color: #218838;
+}
+
+.progress-info {
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: #e7f3ff;
+  border-radius: 8px;
+  border-left: 4px solid #007acc;
+}
+
+.progress-info p {
+  margin: 0.25rem 0;
+}
+
+.message, .test-result {
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.message.success, .test-result.success {
+  background-color: #d4edda;
+  color: #155724;
+  border-left: 4px solid #28a745;
+}
+
+.message.error, .test-result.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-left: 4px solid #dc3545;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: #f6f6f6;
+    background-color: #2f2f2f;
+  }
+
+  a:hover {
+    color: #24c8db;
+  }
+
+  input,
+  button {
+    color: #ffffff;
+    background-color: #0f0f0f98;
+  }
+  button:active {
+    background-color: #0f0f0f69;
+  }
+}
