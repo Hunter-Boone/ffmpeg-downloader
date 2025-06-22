@@ -72,7 +72,7 @@ async fn test_ffmpeg(app: AppHandle) -> Result<String, String> {
     if output.status.success() {
         let version_info = String::from_utf8_lossy(&output.stdout);
         let first_line = version_info.lines().next().unwrap_or("Unknown version");
-        Ok(format!("FFmpeg is working! {}", first_line))
+        Ok(format!("FFmpeg is working! {}\n\nFFmpeg location: {}", first_line, ffmpeg_path.display()))
     } else {
         Err("FFmpeg test failed".to_string())
     }

@@ -2,7 +2,7 @@
 
 A cross-platform desktop application built with Tauri + React that automatically downloads and manages FFmpeg binaries for Windows, macOS, and Linux.
 
-![Build Status](https://github.com/YOUR_USERNAME/ffmpeg-downloader/workflows/Build%20FFmpeg%20Downloader/badge.svg)
+![Build Status](https://github.com/Hunter-Boone/ffmpeg-downloader/workflows/Build%20FFmpeg%20Downloader/badge.svg)
 
 ## ✨ Features
 
@@ -20,10 +20,10 @@ A cross-platform desktop application built with Tauri + React that automatically
 Download the latest release for your platform:
 
 - **Windows**: `.msi` installer or `.exe` standalone
-- **macOS**: `.dmg` disk image or `.app` bundle  
+- **macOS**: `.dmg` disk image or `.app` bundle
 - **Linux**: `.deb` package or `.AppImage` portable
 
-[📥 Download Latest Release](https://github.com/YOUR_USERNAME/ffmpeg-downloader/releases/latest)
+[📥 Download Latest Release](https://github.com/Hunter-Boone/ffmpeg-downloader/releases/latest)
 
 ### Supported FFmpeg Sources
 
@@ -46,7 +46,7 @@ Download the latest release for your platform:
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/ffmpeg-downloader.git
+git clone https://github.com/Hunter-Boone/ffmpeg-downloader.git
 cd ffmpeg-downloader
 
 # Install dependencies
@@ -69,6 +69,7 @@ This repository includes automated CI/CD that builds for all platforms:
 - **Releases**: Automatic release creation for version tags
 
 To create a release:
+
 ```bash
 git tag v1.0.0
 git push origin v1.0.0
