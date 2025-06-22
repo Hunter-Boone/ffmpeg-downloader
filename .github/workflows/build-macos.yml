@@ -1,0 +1,64 @@
+name: Build macOS Only
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '**.md'
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+    timeout-minutes: 45
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin,x86_64-apple-darwin
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build for Intel macOS
+        run: npm run tauri build -- --target x86_64-apple-darwin
+        
+      - name: Build for Apple Silicon
+        run: npm run tauri build -- --target aarch64-apple-darwin
+
+      - name: Create Universal DMG
+        run: |
+          # Create universal binary
+          lipo -create \
+            src-tauri/target/x86_64-apple-darwin/release/ffmpeg-downloader \
+            src-tauri/target/aarch64-apple-darwin/release/ffmpeg-downloader \
+            -output src-tauri/target/release/ffmpeg-downloader-universal
+          
+          # Replace the binary in the Intel build
+          cp src-tauri/target/release/ffmpeg-downloader-universal \
+            "src-tauri/target/x86_64-apple-darwin/release/bundle/macos/FFmpeg Downloader.app/Contents/MacOS/ffmpeg-downloader"
+          
+          # Create DMG from the universal app
+          npm run tauri build -- --target x86_64-apple-darwin --bundles dmg
+
+      - name: Upload macOS artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-universal
+          path: |
+            src-tauri/target/x86_64-apple-darwin/release/bundle/dmg/*.dmg
+            src-tauri/target/x86_64-apple-darwin/release/bundle/macos/*.app

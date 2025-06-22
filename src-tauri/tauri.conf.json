@@ -25,7 +25,9 @@
     "active": true,
     "targets": ["deb", "rpm", "dmg", "msi", "nsis"],
     "macOS": {
-      "minimumSystemVersion": "10.13"
+      "minimumSystemVersion": "10.13",
+      "hardenedRuntime": true,
+      "entitlements": null
     },
     "windows": {
       "certificateThumbprint": null,
