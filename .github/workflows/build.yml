@@ -115,22 +115,28 @@ jobs:
       
       - name: Display structure of downloaded files
         run: |
-          echo "=== Downloaded artifacts ==="
-          find . -type f -name "*.deb" -o -name "*.rpm" -o -name "*.AppImage" -o -name "*.dmg" -o -name "*.app" -o -name "*.msi" -o -name "*.exe" | sort
-          echo "=== Directory structure ==="
-          ls -la */
+          echo "=== All downloadable files ==="
+          find . -type f \( -name "*.deb" -o -name "*.rpm" -o -name "*.AppImage" -o -name "*.dmg" -o -name "*.app" -o -name "*.msi" -o -name "*.exe" \) | sort
+          echo ""
+          echo "=== Full directory structure ==="
+          find . -type d | sort
+          echo ""
+          echo "=== Files that will be released ==="
+          find linux-build/src-tauri/target/release/bundle/ -type f 2>/dev/null || echo "No Linux files"
+          find macos-build/src-tauri/target/*/release/bundle/ -type f 2>/dev/null || echo "No macOS files" 
+          find windows-build/src-tauri/target/release/bundle/ -type f 2>/dev/null || echo "No Windows files"
         
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            **/*.deb
-            **/*.rpm
-            **/*.AppImage
-            **/*.dmg
-            **/*.app
-            **/*.msi
-            **/*.exe
+            linux-build/src-tauri/target/release/bundle/deb/*
+            linux-build/src-tauri/target/release/bundle/rpm/*
+            linux-build/src-tauri/target/release/bundle/appimage/*
+            macos-build/src-tauri/target/*/release/bundle/dmg/*
+            macos-build/src-tauri/target/*/release/bundle/macos/*
+            windows-build/src-tauri/target/release/bundle/msi/*
+            windows-build/src-tauri/target/release/bundle/nsis/*
           name: FFmpeg Downloader ${{ github.ref_name }}
           body: |
             ## 🎉 FFmpeg Downloader ${{ github.ref_name }}
