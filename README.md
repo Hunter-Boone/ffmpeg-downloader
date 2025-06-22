@@ -21,9 +21,16 @@ Download the latest release for your platform:
 
 - **Windows**: `.msi` installer or `.exe` standalone
 - **macOS**: `.dmg` disk image or `.app` bundle
-- **Linux**: `.deb` package or `.AppImage` portable
+- **Linux**: `.deb` package, `.rpm` package, or `.AppImage` portable
 
 [📥 Download Latest Release](https://github.com/Hunter-Boone/ffmpeg-downloader/releases/latest)
+
+### macOS Security Note
+On macOS, you may see "ffmpeg-downloader is damaged and can't be opened" due to Gatekeeper security. To fix this:
+
+1. **Right-click** the app → **Open** → **Open** (bypasses Gatekeeper)
+2. Or run in Terminal: `sudo xattr -rd com.apple.quarantine /Applications/ffmpeg-downloader.app`
+3. Or go to **System Preferences** → **Security & Privacy** → **Allow** the app
 
 ### Supported FFmpeg Sources
 

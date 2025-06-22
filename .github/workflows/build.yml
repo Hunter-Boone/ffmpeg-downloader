@@ -115,6 +115,7 @@ jobs:
           find linux-build -name "*.rpm" -exec cp {} ./release-assets/ \; 2>/dev/null || true
           find linux-build -name "*.AppImage" -exec cp {} ./release-assets/ \; 2>/dev/null || true
           find macos-build -name "*.dmg" -exec cp {} ./release-assets/ \; 2>/dev/null || true
+          find macos-build -name "*.app" -exec cp -r {} ./release-assets/ \; 2>/dev/null || true
           find windows-build -name "*.msi" -exec cp {} ./release-assets/ \; 2>/dev/null || true
           find windows-build -name "*.exe" -exec cp {} ./release-assets/ \; 2>/dev/null || true
           

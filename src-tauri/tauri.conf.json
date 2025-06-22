@@ -27,7 +27,10 @@
     "macOS": {
       "minimumSystemVersion": "10.13",
       "hardenedRuntime": true,
-      "entitlements": null
+      "entitlements": null,
+      "signingIdentity": null,
+      "providerShortName": null,
+      "exceptionDomain": null
     },
     "windows": {
       "certificateThumbprint": null,
