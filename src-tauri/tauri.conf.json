@@ -23,7 +23,7 @@
   },
   "bundle": {
     "active": true,
-    "targets": ["deb", "rpm", "dmg", "msi", "nsis"],
+    "targets": ["deb", "rpm", "dmg", "msi", "nsis", "app"],
     "macOS": {
       "minimumSystemVersion": "10.13",
       "hardenedRuntime": true,

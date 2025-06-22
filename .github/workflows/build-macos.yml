@@ -34,26 +34,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build for Intel macOS
+      - name: Build Intel macOS
         run: npm run tauri build -- --target x86_64-apple-darwin
-        
-      - name: Build for Apple Silicon
-        run: npm run tauri build -- --target aarch64-apple-darwin
 
-      - name: Create Universal DMG
-        run: |
-          # Create universal binary
-          lipo -create \
-            src-tauri/target/x86_64-apple-darwin/release/ffmpeg-downloader \
-            src-tauri/target/aarch64-apple-darwin/release/ffmpeg-downloader \
-            -output src-tauri/target/release/ffmpeg-downloader-universal
-          
-          # Replace the binary in the Intel build
-          cp src-tauri/target/release/ffmpeg-downloader-universal \
-            "src-tauri/target/x86_64-apple-darwin/release/bundle/macos/FFmpeg Downloader.app/Contents/MacOS/ffmpeg-downloader"
-          
-          # Create DMG from the universal app
-          npm run tauri build -- --target x86_64-apple-darwin --bundles dmg
+      - name: Build Apple Silicon macOS  
+        run: npm run tauri build -- --target aarch64-apple-darwin
 
       - name: Upload macOS artifacts
         uses: actions/upload-artifact@v4
