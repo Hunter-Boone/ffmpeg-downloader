@@ -100,18 +100,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
-    permissions:
-      contents: write
-      packages: write
-      deployments: write
     steps:
-      - name: Debug release condition
-        run: |
-          echo "GitHub ref: ${{ github.ref }}"
-          echo "GitHub ref name: ${{ github.ref_name }}"
-          echo "GitHub event name: ${{ github.event_name }}"
-          echo "Condition result: ${{ startsWith(github.ref, 'refs/tags/v') }}"
-      
       - uses: actions/checkout@v4
       
       - name: Download all artifacts
@@ -121,20 +110,15 @@ jobs:
         run: |
           mkdir -p ./release-assets
           
-          # Copy and rename files with clear names
-          echo "=== Organizing Linux files ==="
-          cp linux-build/src-tauri/target/release/bundle/deb/*.deb ./release-assets/ 2>/dev/null || echo "No .deb files"
-          cp linux-build/src-tauri/target/release/bundle/rpm/*.rpm ./release-assets/ 2>/dev/null || echo "No .rpm files"
-          cp linux-build/src-tauri/target/release/bundle/appimage/*.AppImage ./release-assets/ 2>/dev/null || echo "No .AppImage files"
+          # Copy installer files only
+          cp linux-build/src-tauri/target/release/bundle/deb/*.deb ./release-assets/ 2>/dev/null || true
+          cp linux-build/src-tauri/target/release/bundle/rpm/*.rpm ./release-assets/ 2>/dev/null || true
+          cp linux-build/src-tauri/target/release/bundle/appimage/*.AppImage ./release-assets/ 2>/dev/null || true
+          find macos-build/src-tauri/target/*/release/bundle/dmg/ -name "*.dmg" -exec cp {} ./release-assets/ \; 2>/dev/null || true
+          cp windows-build/src-tauri/target/release/bundle/msi/*.msi ./release-assets/ 2>/dev/null || true
+          cp windows-build/src-tauri/target/release/bundle/nsis/*.exe ./release-assets/ 2>/dev/null || true
           
-          echo "=== Organizing macOS files ==="
-          find macos-build/src-tauri/target/*/release/bundle/dmg/ -name "*.dmg" -exec cp {} ./release-assets/ \; 2>/dev/null || echo "No .dmg files"
-          
-          echo "=== Organizing Windows files ==="
-          cp windows-build/src-tauri/target/release/bundle/msi/*.msi ./release-assets/ 2>/dev/null || echo "No .msi files"
-          cp windows-build/src-tauri/target/release/bundle/nsis/*.exe ./release-assets/ 2>/dev/null || echo "No .exe files"
-          
-          echo "=== Final release files ==="
+          echo "Release files ready:"
           ls -la ./release-assets/
         
       - name: Create Release
@@ -143,39 +127,21 @@ jobs:
           files: ./release-assets/*
           name: FFmpeg Downloader ${{ github.ref_name }}
           body: |
-            ## 🎉 FFmpeg Downloader ${{ github.ref_name }}
+            ## FFmpeg Downloader ${{ github.ref_name }}
             
             Cross-platform FFmpeg downloader with automatic OS detection and real-time progress tracking.
             
-            ### 📦 Downloads
+            ### Downloads
+            - **Windows**: `.msi` installer, `.exe` standalone
+            - **macOS**: `.dmg` disk image (Intel + Apple Silicon)
+            - **Linux**: `.deb`, `.rpm`, `.AppImage` packages
             
-            **Windows:**
-            - `.msi` - Windows Installer package
-            - `.exe` - Standalone executable (NSIS installer)
-            
-            **macOS:**
-            - `.dmg` - Disk image for easy installation
-            - `.app` - Application bundle
-            - Includes both Intel (x86_64) and Apple Silicon (ARM64) builds
-            
-            **Linux:**
-            - `.deb` - Debian/Ubuntu package
-            - `.rpm` - RedHat/Fedora/SUSE package  
-            - `.AppImage` - Portable Linux application
-            
-            ### ✨ Features
-            - 🖥️ Cross-platform support (Windows, macOS, Linux)
-            - 📥 Smart OS detection and binary selection
-            - 📊 Real-time download progress
-            - ✅ Built-in FFmpeg verification
-            - 🎨 Modern React UI
-            - 🔒 Secure Tauri framework
-            
-            ### 🔗 FFmpeg Sources
-            - **Windows/Linux**: [FFmpeg-Builds](https://github.com/BtbN/FFmpeg-Builds) (Latest GPL)
-            - **macOS**: [evermeet.cx](https://evermeet.cx/ffmpeg/) (Latest release)
-            
-            ---
+            ### Features
+            - Cross-platform support (Windows, macOS, Linux)
+            - Smart OS detection and binary selection  
+            - Real-time download progress
+            - Built-in FFmpeg verification
+            - Modern React UI with Tauri framework
             
             **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ github.event.repository.default_branch }}...${{ github.ref_name }}
           draft: false
