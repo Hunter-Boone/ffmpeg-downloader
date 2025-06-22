@@ -26,14 +26,16 @@ Download the latest release for your platform:
 [📥 Download Latest Release](https://github.com/Hunter-Boone/ffmpeg-downloader/releases/latest)
 
 ### macOS Installation
+
 When you first open the app on macOS, you'll see a security prompt:
 
-1. **"App was downloaded from the internet"** → Click **"Open"** 
+1. **"App was downloaded from the internet"** → Click **"Open"**
 2. The app will open and work normally from then on
 3. This is normal for unsigned apps and only happens once
 
 **Note**: If you see "damaged and can't be opened" instead:
-- **Right-click** the app → **Open** → **Open** 
+
+- **Right-click** the app → **Open** → **Open**
 - Or run: `sudo xattr -rd com.apple.quarantine /path/to/ffmpeg-downloader.app`
 
 ### Supported FFmpeg Sources
@@ -154,3 +156,19 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Recommended IDE Setup
 
 - [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+
+## Installation
+
+### macOS Users
+
+If you see a "damaged" or security warning when opening the app:
+
+1. **Method 1**: Right-click the app → Select "Open" → Click "Open" in the dialog
+2. **Method 2**: Go to System Preferences → Security & Privacy → Click "Open Anyway"
+3. **Method 3** (Terminal): Run `xattr -d com.apple.quarantine /path/to/ffmpeg-downloader.app`
+
+This happens because the app isn't signed with an Apple Developer certificate. The app is safe to use.
+
+### Windows & Linux
+
+No additional steps required - just run the installer.
