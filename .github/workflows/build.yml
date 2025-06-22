@@ -2,11 +2,11 @@ name: Build FFmpeg Downloader
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
     tags:
-      - 'v*'
+      - "v*"
   pull_request:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -32,8 +32,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -43,7 +43,7 @@ jobs:
       - name: Rust cache
         uses: swatinem/rust-cache@v2
         with:
-          workspaces: './src-tauri -> target'
+          workspaces: "./src-tauri -> target"
 
       - name: Install dependencies (Ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
@@ -62,7 +62,7 @@ jobs:
         if: matrix.platform == 'macos-latest'
         run: npm run tauri build -- --target x86_64-apple-darwin
 
-      - name: Build Apple Silicon macOS  
+      - name: Build Apple Silicon macOS
         if: matrix.platform == 'macos-latest'
         run: npm run tauri build -- --target aarch64-apple-darwin
 
@@ -102,14 +102,14 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Download all artifacts
         uses: actions/download-artifact@v4
-      
+
       - name: Organize release files
         run: |
           mkdir -p ./release-assets
-          
+
           # Copy only installer files
           find linux-build -name "*.deb" -exec cp {} ./release-assets/ \; 2>/dev/null || true
           find linux-build -name "*.rpm" -exec cp {} ./release-assets/ \; 2>/dev/null || true
@@ -118,13 +118,13 @@ jobs:
           find macos-build -name "*.app" -exec cp -r {} ./release-assets/ \; 2>/dev/null || true
           find windows-build -name "*.msi" -exec cp {} ./release-assets/ \; 2>/dev/null || true
           find windows-build -name "*.exe" -exec cp {} ./release-assets/ \; 2>/dev/null || true
-          
+
           # Remove original artifact directories to prevent double upload
           rm -rf linux-build macos-build windows-build
-          
+
           echo "Release assets ready:"
           ls -la ./release-assets/
-        
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
@@ -132,21 +132,21 @@ jobs:
           name: FFmpeg Downloader ${{ github.ref_name }}
           body: |
             ## FFmpeg Downloader ${{ github.ref_name }}
-            
+
             Cross-platform FFmpeg downloader with automatic OS detection and real-time progress tracking.
-            
+
             ### Downloads
             - **Windows**: `.msi` installer, `.exe` standalone
             - **macOS**: `.dmg` disk image (Intel + Apple Silicon)
             - **Linux**: `.deb`, `.rpm`, `.AppImage` packages
-            
+
             ### Features
             - Cross-platform support (Windows, macOS, Linux)
             - Smart OS detection and binary selection  
             - Real-time download progress
             - Built-in FFmpeg verification
             - Modern React UI with Tauri framework
-            
+
             **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ github.event.repository.default_branch }}...${{ github.ref_name }}
           draft: false
           prerelease: ${{ contains(github.ref_name, 'alpha') || contains(github.ref_name, 'beta') || contains(github.ref_name, 'rc') }}
