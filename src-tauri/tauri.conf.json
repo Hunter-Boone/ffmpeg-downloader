@@ -26,7 +26,7 @@
     "targets": ["deb", "rpm", "dmg", "msi", "nsis", "app"],
     "macOS": {
       "minimumSystemVersion": "10.13",
-      "hardenedRuntime": true,
+      "hardenedRuntime": false,
       "entitlements": null,
       "signingIdentity": null,
       "providerShortName": null,
