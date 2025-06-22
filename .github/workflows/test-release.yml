@@ -1,0 +1,95 @@
+name: Test Release (Manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      create_release:
+        description: 'Actually create a GitHub release'
+        type: boolean
+        default: false
+      test_version:
+        description: 'Version to test with (e.g., v1.0.0-test)'
+        required: true
+        default: 'v1.0.0-test'
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [ubuntu-latest] # Just Linux for testing
+        
+    runs-on: ${{ matrix.platform }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Install dependencies (Ubuntu only)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf xdg-utils
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Tauri app
+        run: npm run tauri build
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-build
+          path: |
+            src-tauri/target/release/bundle/deb/*.deb
+            src-tauri/target/release/bundle/rpm/*.rpm
+
+  test-release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: ${{ inputs.create_release }}
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        
+      - name: Display downloaded files
+        run: |
+          echo "Files that would be released:"
+          find . -name "*.deb" -o -name "*.rpm" -o -name "*.dmg" -o -name "*.msi" -o -name "*.exe" -o -name "*.AppImage" | sort
+      
+      - name: Create test release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            test-build/*
+          name: Test Release ${{ inputs.test_version }}
+          tag_name: ${{ inputs.test_version }}
+          body: |
+            ## 🧪 Test Release ${{ inputs.test_version }}
+            
+            This is a test release to verify the release automation works.
+            
+            **Files included:**
+            - Linux .deb package
+            - Linux .rpm package
+            
+            This release was created manually for testing purposes.
+          draft: true
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

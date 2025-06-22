@@ -93,6 +93,13 @@ jobs:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
     steps:
+      - name: Debug release condition
+        run: |
+          echo "GitHub ref: ${{ github.ref }}"
+          echo "GitHub ref name: ${{ github.ref_name }}"
+          echo "GitHub event name: ${{ github.event_name }}"
+          echo "Condition result: ${{ startsWith(github.ref, 'refs/tags/v') }}"
+      
       - uses: actions/checkout@v4
       
       - name: Download all artifacts
