@@ -132,8 +132,11 @@ fn extract_tar_gz(archive_path: &PathBuf, extract_dir: &PathBuf) -> Result<(), S
     let file = std::fs::File::open(archive_path).map_err(|e| e.to_string())?;
     
     if archive_path.extension().and_then(|s| s.to_str()) == Some("xz") {
-        let dec = lzma_rs::xz_decompress::XzDecoder::new(file);
-        let mut archive = tar::Archive::new(dec);
+        // Decompress XZ file to memory first, then create tar archive
+        let mut buf_reader = std::io::BufReader::new(file);
+        let mut decompressed_data = Vec::new();
+        lzma_rs::xz_decompress(&mut buf_reader, &mut decompressed_data).map_err(|e| e.to_string())?;
+        let mut archive = tar::Archive::new(std::io::Cursor::new(decompressed_data));
         
         for entry in archive.entries().map_err(|e| e.to_string())? {
             let mut entry = entry.map_err(|e| e.to_string())?;
