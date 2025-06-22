@@ -30,8 +30,7 @@
       "entitlements": null,
       "signingIdentity": null,
       "providerShortName": null,
-      "exceptionDomain": null,
-      "license": null
+      "exceptionDomain": null
     },
     "windows": {
       "certificateThumbprint": null,
