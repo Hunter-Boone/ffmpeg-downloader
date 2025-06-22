@@ -93,8 +93,13 @@ jobs:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
     steps:
+      - uses: actions/checkout@v4
+      
       - name: Download all artifacts
         uses: actions/download-artifact@v4
+      
+      - name: Display structure of downloaded files
+        run: ls -la **/
         
       - name: Create Release
         uses: softprops/action-gh-release@v1
@@ -103,7 +108,45 @@ jobs:
             macos-build/*
             linux-build/*
             windows-build/*
+          name: FFmpeg Downloader ${{ github.ref_name }}
+          body: |
+            ## 🎉 FFmpeg Downloader ${{ github.ref_name }}
+            
+            Cross-platform FFmpeg downloader with automatic OS detection and real-time progress tracking.
+            
+            ### 📦 Downloads
+            
+            **Windows:**
+            - `.msi` - Windows Installer package
+            - `.exe` - Standalone executable (NSIS installer)
+            
+            **macOS:**
+            - `.dmg` - Disk image for easy installation
+            - `.app` - Application bundle
+            - Includes both Intel (x86_64) and Apple Silicon (ARM64) builds
+            
+            **Linux:**
+            - `.deb` - Debian/Ubuntu package
+            - `.rpm` - RedHat/Fedora/SUSE package  
+            - `.AppImage` - Portable Linux application
+            
+            ### ✨ Features
+            - 🖥️ Cross-platform support (Windows, macOS, Linux)
+            - 📥 Smart OS detection and binary selection
+            - 📊 Real-time download progress
+            - ✅ Built-in FFmpeg verification
+            - 🎨 Modern React UI
+            - 🔒 Secure Tauri framework
+            
+            ### 🔗 FFmpeg Sources
+            - **Windows/Linux**: [FFmpeg-Builds](https://github.com/BtbN/FFmpeg-Builds) (Latest GPL)
+            - **macOS**: [evermeet.cx](https://evermeet.cx/ffmpeg/) (Latest release)
+            
+            ---
+            
+            **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ github.event.repository.default_branch }}...${{ github.ref_name }}
           draft: false
-          prerelease: false
+          prerelease: ${{ contains(github.ref_name, 'alpha') || contains(github.ref_name, 'beta') || contains(github.ref_name, 'rc') }}
+          generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
